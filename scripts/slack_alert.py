@@ -1,14 +1,34 @@
 import requests
+import os
+import sys
 
-# Replace with your actual Slack webhook URL
-SLACK_WEBHOOK = "https://hooks.slack.com/services/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"
+# Get Slack webhook from environment variable (secure)
+SLACK_WEBHOOK = os.getenv("SLACK_WEBHOOK")
 
-data = {
-    "text": "🚨 AGE-APP Alert: High CPU detected or Deployment Issue!"
-}
+def send_slack_alert(message="General Alert from AGE-APP"):
+    if not SLACK_WEBHOOK:
+        print("⚠️  SLACK_WEBHOOK_URL environment variable is not set!")
+        return False
 
-try:
-    response = requests.post(SLACK_WEBHOOK, json=data)
-    print("✅ Slack alert sent!" if response.status_code == 200 else "❌ Failed to send alert")
-except:
-    print("❌ Could not send Slack alert")
+    data = {
+        "text": f"🚨 AGE-APP Alert\n{message}"
+    }
+
+    try:
+        response = requests.post(SLACK_WEBHOOK, json=data, timeout=10)
+        if response.status_code == 200:
+            print("✅ Slack alert sent successfully!")
+            return True
+        else:
+            print(f"❌ Failed to send Slack alert. Status: {response.status_code}")
+            return False
+    except Exception as e:
+        print(f"❌ Error sending Slack alert: {e}")
+        return False
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        send_slack_alert(sys.argv[1])
+    else:
+        send_slack_alert("Test Alert: AGE-APP Monitoring")
