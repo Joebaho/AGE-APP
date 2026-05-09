@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile Platform</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>User Profile Classification Platform</h1>
+
+    <form method="POST">
+
+        <input type="text" name="first_name" placeholder="First Name" required>
+
+        <input type="text" name="last_name" placeholder="Last Name" required>
+
+        <input type="date" name="birthday" required>
+
+        <button type="submit">Generate Profile</button>
+
+    </form>
+
+    {% if result %}
+
+    <div class="result">
+
+        <h2>Profile Result</h2>
+
+        <p><strong>First Name:</strong> {{ result.first_name }}</p>
+
+        <p><strong>Last Name:</strong> {{ result.last_name }}</p>
+
+        <p><strong>Birthday:</strong> {{ result.birthday }}</p>
+
+        <p><strong>Day of Week:</strong> {{ result.day }}</p>
+
+        <p><strong>Age:</strong> {{ result.age }}</p>
+
+        <p><strong>Primary Category:</strong> {{ result.primary_category }}</p>
+
+        <p><strong>Secondary Category:</strong> {{ result.secondary_category }}</p>
+
+        <p><strong>User Code:</strong> {{ result.user_code }}</p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
