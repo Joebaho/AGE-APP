@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: age-app
-        image: YOUR_DOCKERHUB_USERNAME/age-app:v1
+        image: joebaho2/age-app:v1
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
