@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 import random
-import string
 import logging
 
 app = Flask(__name__)
@@ -9,9 +8,16 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def generate_code(day, birth_date):
-    random_part = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-    return f"{day[:3].upper()}-{birth_date.day}{birth_date.month}-{random_part}"
+# NEW CODE GENERATION: first 3 letters of day - age - random number
+def generate_code(day_name, age):
+    """
+    day_name: full day name, e.g. 'Monday'
+    age: integer age
+    returns: e.g. 'MON-25-8472'
+    """
+    day_prefix = day_name[:3].upper()          # first three letters, uppercase
+    random_num = random.randint(10000, 99999)  # 5‑digit random number
+    return f"{day_prefix}-{age}-{random_num}"
 
 def get_primary_category(age):
     if age <= 17: return "Minor"
@@ -47,7 +53,9 @@ def index():
             age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
 
             day_of_week = birthday.strftime("%A")
-            user_code = generate_code(day_of_week, birthday)
+
+            # Use the NEW generate_code with day name and age
+            user_code = generate_code(day_of_week, age)
 
             result = {
                 'first_name': first_name,
@@ -59,7 +67,7 @@ def index():
                 'secondary_category': get_secondary_category(age),
                 'user_code': user_code
             }
-            logger.info(f"Profile generated for {first_name} {last_name}")
+            logger.info(f"Profile generated for {first_name} {last_name} | User code: {user_code}")
             return render_template('index.html', result=result)
         except Exception as e:
             logger.error(f"Error: {str(e)}")
